@@ -1,0 +1,217 @@
+TIPOS DE PERL
+
+$ -> escalar                ($calar)
+@ -> vetor ou lista         (@rray)
+% -> hash/vetor associativo (%ash)
+& -> função/subrotina       (&)
+  -> file handle            (ponteiros para arquivos)
+* -> thingy                 (tudo junto)
+
+ESCALARES
+
+Podem ser de 3 tipos:
+* Números (doubles);
+    -> Podem, ou não, ter _ para aumentar a legibilidade.
+* string;
+    -> verbatim         (aspas simples, q)
+    -> executada        (acento grave, qx)
+    -> com interpolação (aspas duplas, qq)
+* referência.
+
+    EXEMPLO DE PROGRAMA:
+    
+    $a = 42;            
+    $b = "abóbora";        n |      | Representaremos, na memória, 
+    print $b;              s |      | a variável como esta caixa
+    print $a;              r |      | (uma union que comporta string,
+    $a++;                             número e referência)
+
+    $a = 42  -> será um número
+    print $a -> será convertida para string e impressa
+    $a++     -> reconverte para número e depois soma 1 (vira 43)
+
+    STRINGS (INTERPOLAÇÃO: ", qq)
+        $d = "contém $a"; -> contém "42"
+        
+        Para escrever com aspas:
+        $d = "contém \"$a\""; (estamos escapando as aspas duplas)
+        $d = qq/contém "$a"/; (qq - double quote: podemos usar qualquer
+                                    delimitador.) 
+        
+        Se quiséssemos por exemplo, uma barra no meio, 
+        também poderíamos usar qualquer outro caracter delimitador:
+        $d = qq|contém $a|;
+    
+    STRINGS (LITERAL ou VERBATIM: ', q)
+        $v = 'contém $a'    -> imprime $a
+        
+        Ou, para usar as aspas simples, como acima:
+        $v = q/contém '$a'/   -> imprime $a
+    
+    STRINGS (COM EXECUÇÃO: `, qx)
+        $x = `ls`;            -> Coloca, em x, a saída de ls.
+                                 Ele chama o bash, pega a saída,
+                                 e depois coloca na variável.
+        
+        $x = `cat bible.txt`; -> Mas é necessário tomar cuidado,
+                                 pois isso pode alocar MUITA memória.
+        
+        $x = qx/ls/           -> É o equivalente a qx
+
+    STRING (TERMINADOR)
+        Com aspas simples, não executa. Com aspas duplas,
+        ele interpreta.
+        
+        print <<FIM;
+            Esta é uma entrada com
+            várias linhas, pode colocar
+            quantas quiser, $a ou ainda
+            mais
+        FIM
+        
+        E com aspas invertidas, manda executar no bash!
+        print << `FIM`;
+            ls -l
+        FIM
+        
+        E podemos fazer bizarrices;
+        $d = 3 * <<NUMERO   É equivalente à 3 * "14\n", e o 
+            14              "14\n" será convertido, via atof,
+        NUMERO              internamente, para 14.
+        
+        $bizarro = <<UM + <<DOIS;
+        20                          Será equivalente a fazer,
+        UM                          na realidade:
+        22                          "20\n" + "22\nHehe\n"
+        Hehe                        E terá, então:
+        DOIS                        20 + 22 = 42
+        
+        $mais_bizarro = <<UM + <<UM;
+        20              ^^^^   ^^^^     
+        UM <-------------'      |       
+        22                      |       
+        Hehe                    |       
+        UM <--------------------'       
+        
+        $tot = `wc arq1.txt` + `wc arq2.txt`;
+               "3263 1200 45"  "2012 648 100"
+        
+        O atof pegaria 3253 e também o 100.
+    
+    MAIS EXEMPLOS
+        print '-' x 70 . "\n"
+                  ^    ^
+                  |    '-- Operador de concatenação
+                  '-- Operador que imprime '-' 70 vezes
+
+REFERÊNCIAS
+    
+    $a = \$b;           ($a tem uma referência para $b)
+    $c = ${$a} ou $$a   (Deferencia '$a', uma referência, para
+                        conseguir encontrar o conteúdo de b).
+    
+    Nesse caso acima, não é necessário usar as chaves, mas é
+    melhor, como boa prática, utilizar as chaves.
+    
+    $r = \$b; # Também cria uma referência para b. 
+              # Continuamos a ter, ainda, apenas uma cópia
+    
+    $n = $a;  # Estamos copiando a referência. Logo, temos
+              # uma nova variável apontando para ela.
+    
+    $o = $b;  # Agora, estamos criando uma cópia para o conteúdo
+              # guardado.
+    
+              $a    .----> $b <---.    $r
+          n |    |  |  n | 42 |   | n |    |
+          s |    |  |  s |    |   | s |    |
+          r |  --:--'  r |    |   '-r-:-   |
+                           ^
+              $n           |
+          n |    |         |
+          s |    |         |
+          r |  --:---------'
+    
+    Todas as variáveis têm um 'contador' interno que diz quantas
+    referências há para sua memória. Quando ninguém mais estiver
+    vendo aquele bloco de memória, então o conteúdo será LIBERADO
+    pelo coletor de lixo.
+    
+    Mesmo que $b tivesse sido criado numa função, e com isso, 
+    acabássemos liberando-a no fim da função, o conteúdo não será
+    liberado caso haja alguém apontando para ela.
+    
+    As referências são sempre para as 'caixas', e por isso, 
+    sempre temos acesso a todos os campos.
+    
+    Temos de tomar cuidado com tudo isso, porque, em alguns casos,
+    podemos gerar referências cíclicas, que nunca zeram o contador
+    de referências, e, logo, nunca são liberadas. Ex:
+    
+        $a = \$b; $b = \$a;
+        
+        .---> $a    .----> $b
+        | n |    |  |  n | 42 |
+        | s |    |  |  s |    |
+        | r |  --:--'  r |  . |
+        '-------------------'
+    
+ARRAYS
+    
+    @ -> array
+    @a = (1, 'dois', $x);
+    
+    Os arrays são sempre listas de ESCALARES. Cada posição tem,
+    dentro de si, as estruturas de caixinhas.
+    
+        |           |
+        |   |   |   |
+          /   |   \
+         /    |    \$x
+      | 1 | |   | |   |
+      |   | |'d'| |   |
+      |   | |   | |   |
+    
+    Quando colocamos listas dentro de outras, o que ela faz,
+    na realidade, é colocar as variáveis no meio das listas.
+    
+        @u = (1, 2, 3);
+        @d = (4, 5, 6)
+        @t = (1, 2, @u, 'x', @d) -->
+             (1, 2, 1, 2, 3, 'x', 4, 5, 6)
+    
+    Podemos usar ranges dentro de um vetor:
+    @letras = ('a'..'z') (fará a lista com caracteres e 'a' a 'z')
+    
+    Para pegar a segunda letra:
+    $letras[2] (é igual a 'c')
+    
+    Mas para pegar um trecho:
+    @letras[2..5] (é igual a 'c', 'd', 'e', 'f')
+    
+    E também, serve para apenas um elemento:
+    @letras[1] (é o mesmo que ('b'), o vetor)
+    
+    E se criarmos:
+    $letras[-2] (é o mesmo que 'y' - negativo começa do fim)
+    
+    Mas para índices acima, esticaremos o vetor com undef's:
+    @letras[25, 2, 4..9, 13];
+    
+    Mas ara fazermos, agora de verdade, uma referência a vetor:
+    $r = \@letras;
+    
+    E também podemos fazer diretamente, usando uma lista de valores:
+    $s = [1, 10, 100]; (Estamos criando, nesse caso, uma lista
+                        anônima, que na realidade, não tem nome.
+                        Mas agora temos uma referência para ela).
+    
+    Essa é uma forma de deferenciar a referência acima (usando 
+    o @{}, como para o ${}), e a atribuímos a @v.
+    @v = @{$s}; ou @v = @$s;
+    
+    E para pegar os elementos, temos duas maneiras:
+    @{$s}[2] ou @s->[2]; (bem mais compacto...)
+    
+    E para separar strings em palavras?
+    @nomes = qw/joão maria alberto carla/;

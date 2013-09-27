@@ -1,0 +1,37 @@
+1ª Fase (em breve)
+
+Máquina Virtual (em Perl) + Montador (em Perl)
+
+MÁQUINA VIRTUAL (Baseada em pilha)
+    ↑ | empilha     4
+    ↑ | empilha     10
+    + | soma        
+    ↑ | empilha     3
+    * | multiplica  
+    P | imprime     topo
+    Δ | pare
+
+PROGRAMA (vetor de instruções)
+-> Instrução: código + operando (opcional)
+
+EXEMPLO (dos símbolos acima)
+| ↑ |  ↑ | + | ↑ | * | P | Δ |
+| 4 | 10 | / | 3 | / | / | / |
+
+EXECUÇÃO
+|  4 | ↑ |  4 | + | 14 | ↑ | 14 | * | 42 |
+|    | → | 10 | → |    | → |  3 | → |    |
+|    |   |    |   |    |   |    |   |    |
+
+MEMÓRIA: VETOR
+
+INSTRUÇÕES
+-----------------------------------------------------------------------
+empilha/desempilha      (operações de pilha)
++, -, *, /              (operadores aritméticos)
+>, <. >=, <=, ==, !=    (operadores lógicos)
+print                   (impressão na tela)
+store n                 (guarda o topo na posição 'n' da memória)
+recal n                 (recarrega)
+jmp                     (salto)
+jmp cond                (salto condicional)

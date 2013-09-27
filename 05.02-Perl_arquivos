@@ -1,0 +1,25 @@
+LEITURA DE ARQUIVOS
+
+# Esta é uma expressão típica para abrir arquivos
+open FH, ">", "arq.txt" or die "problemas..."
+          ^             ^-- N não é usado o || porque ele pode
+          |                 pegar a expressão, sem arquivos. 'and'
+          |                 e 'or' têm prioridade baixíssima.
+          '---------------- Estes são separadores, e eles podem ter
+                            vários formatos: 
+                            "<"  abrir para leitura
+                            ">"  abrir para escrita
+                            ">>" abrir para escrita no final
+                            "|"  tudo que for escrito em FH será
+                                 enviado para um programa. Ex:
+                                 open FH, "|" "gnuplot";
+                                 (manda automaticamente para gnuplot)
+    
+    $| = 1; ->  Permite fazer um 'flush' nos filehandles, para não 
+                esperar o buffer encher.
+    select  ->  coloca certo filehandle como default para funções que
+                as usam (como 'print')
+
+    $l = <FH>; # lê um registro, separado por $/
+
+close FH;

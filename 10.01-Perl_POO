@@ -1,0 +1,30 @@
+POO em Perl
+----------------
+
+Tipo      Classe        |       package
+Variável  Objeto        |  referência blessed
+          |-> atributos | 
+          '-> métodos   | Tipicamente: atributos -> valores em um hash
+                        |              métodos   -> subs no package
+                        |                           '-> recebem a
+                        |                               referência (obj)
+                        |                               como 1º arg
+Herança                 |  
+'-> Extensão da classe  |
+    ('extends' em Java) |
+
+                        }
+          Pilha         } Quando criamos uma subclasse, que herda o 
+    .----------------.  } conceito (como no exemplo ao lado, pilhas
+    | Pilhas com DUP |  } com DUP), as INTERFACES permitem que seja 
+    |       .----.   |  } um 'contrato'. Podemos alterar a implemen-
+    |       |    |   |  } tação (pelo encapsulamento), mas as funções
+    |       |    |   |  } e variáveis devem permanecer as mesmas, pois 
+    |       |    |   |  } o tipo é definido de acordo com seus ATRI-
+    |       '----'   |  } BUTOS e MÉTODOS. Para mudar mais que isso, 
+    |  .---------.   |  } talvez teríamos de trocar a INTERFACE.
+    |  |         |   |  } 
+    '--:---------:---'  } Caso, porém, queiramos adicionar, então 
+       |         |      } podemos ESTENDER - que é o conceito prin-
+       |         |      } cipal da herança. Em Perl, esta é feita
+  Fila '---------'      } usando o vetor @ISA.

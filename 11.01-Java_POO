@@ -1,0 +1,61 @@
+Níveis de proteção em Java
+---------------------------
+
+Uma classe pode ser 'public' ou 'amigável' - o segundo tipo é
+automático, e o primeiro tipo permite que a classe seja instanciada
+de fora do seu pacote (arquivo) específico.
+
+Os métodos e atributos que compõem uma classe (e que estão presentes
+nos objetos), podem ter 4 níveis de 'segurança':
+
+- public    : acessível por todos: classes filhas, classes externas
+              ao pacote, e mesmo de fora;
+- protected : não acessível externamente, mas ainda acessível para
+              as classes filhas - intermediário de public e protected;
+- private   : o método/atributo é acessível APENAS dentro da sua
+              classe - e não por classes filhas ou externas;
+- friendly  : caso geral, em que a classe é acessível para o pacote,
+              e classes filhas, mas não para fora do pacote.
+
+Existe também uma maneira de construir classes ABSTRATAS, e classes
+NÃO MODIFICÁVEIS: as palavras 'abstract' e 'final':
+
+- abstract  : uma classe declarada como 'abstract' deve conter um método
+              'abstract', que deve ser sobrecarregado posteriormente.
+              A intenção disso é que indiquemos que as classes filhas
+              a essa classe deve ter este método, mas ele ainda não 
+              foi implementado.
+              
+              Essa funcionalidade é como se houvesse um protótipo de
+              função não implementado, que as classes filhas DEVEM
+              implementar.
+- final     : pode servir para classes, métodos e atributos:
+              - classes   : a classe não pode ter subclasses;
+              - atributos : os atributos não podem ser mudados - 
+                            funciona como um 'constant' do C;
+              - métodos   : não podem ser sobrecarregados pelas 
+                            classes filhas.
+
+Podemos criar VARIÁVEIS de classe e MÉTODOS de classe - que não estão
+relacionados à objetos, mas à classe. Esses métodos são declarados com
+o modificador 'static'.
+
+Temos, então, os seguintes modificadores (com significados DIFERENTES):
+* classes   : final, abstract, public;
+* métodos   : final, abstract, public, private, protected, static;
+* atributos : final,           public, private, protected, static.
+
+Em Java, existe o comando 'package', que funciona como um 'namespace'
+de C++: ele serve para agrupar diferentes classes em grupos de classes
+relacionadas, que criam um nível extra de abstração para o programa.
+
+NOTA: cada arquivo pode ter UMA ÚNICA CLASSE PÚBLICA, mas um 'package'
+      pode ter várias classes PÚBLICAS. Os atributos e métodos do tipo
+      'public' são visíveis ao pacote.
+
+A declaração de 'package' deve estar no topo do arquivo. Os pacotes 
+podem ser usados em um arquivo fazendo 'import' dos arquivos (análogo
+ao 'use' do Perl ou o 'include' do C/C++), que torna tudo público no
+pacote disponível para o arquivo.
+
+O 'import' segue uma estrutura de diretórios bem definida: conforme 

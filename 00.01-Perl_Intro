@@ -1,0 +1,121 @@
+PERL (Larry Wall)
+(Practical Extraction Reporting Language)
+-----------------------------------------
+    
+O símbolo é um dromedário: 
+extremamente útil e grotesco
+    
+Também tem como símbolo um canivete
+suíço, pois junta várias ferramentas:
+awk + csh + sed + grep + ...
+    
+Larry Wall era um linguísta, e por esse 
+motivo Perl tem uma estrutura mais parecida
+com a linguagem natural.
+    
+Isso trouxe algumas necessidades: não
+tem regras rígidase e adiciona símbolos
+à variáveis.
+    
+As linguagens de script ajudam a resolver
+problemas rapidamente, não tão preocupados
+exatamente com a eficiência nem de veloci-
+dade (como C) ou de memória (como Assembly).
+    
+Uma das maiores utilidades de Perl é justa-
+mente as aplicações relacionadas à texto.
+    
+Linguagens de script (ambiente Unix)
+------------------------------------
+    
+Permissões: (chmod/chown)
+    
+u - user   (dono)
+g - grupo  (definido pelo admin)
+o - outros (todos)
+    
+        r   w   x  
+      .---.---.---.
+    u |   |   |   |
+      |---|---|---|
+    g |   |   |   |
+      |---|---|---|
+    o |   |   |   |
+      '---'---'---'
+
+Todo arquivo de texto executável é passado
+para um interpretador. Por padrão, coloca-se
+em um interpretador.
+
+    O # é um comentário, por padrão
+
+O #! pode ser usado para definir qual é o
+programa que interpretará. Ex:
+
+.--> shebang
+| _________.--> path
+#!/bin/bash         (bash)
+#!/usr/bin/gawk     (awk)
+#!/usr/bin/perl     (perl)
+#!/usr/bin/python   (python)
+
+Exemplos de programas em Perl
+-----------------------------
+
+* Hello World:
+    
+    #!/bin/perl
+    
+    print "Hello World\n";
+    
+*  'A resposta é 42'
+    
+    #!/bin/perl
+    
+         .--> variável escalar
+         |     .--> '_' é para aumentar a legibilidade,
+         |     |        mas é um número normal
+         |     |          .--> É jogado no 'atof', 
+    _____|  ___|  ________|    e interpretado como '4'  
+    $resp = 1_0 * "4 maças"
+    $resp += 2;
+    
+    print << AQUI; } Forma de impressão para
+                     textos mais longos
+    A resposta é $resp ] Texto a ser impresso
+    e está na variável ] 
+    AQUI
+    
+                .--> Não será interpretado 
+          ______|    por causa das aspas simples
+    print '$resp'."\n";
+                 ^-- Sinal de concatenação
+    
+    Saída: A resposta é 41
+           que está na variável:
+           $resp
+    
+    TIPOS DE STRINGS:
+    * Interpolação (com "):
+        $a = 2;
+        $b = "algo que aparece $a vezes";
+        print $b;
+        
+        Saída: algo que aparece 2 vezes
+    
+    * Literal (com '):
+        $a = 2;
+        $b = 'algo que aparece $a vezes';
+        print $b;
+        
+        Saída: algo que aparece $a vezes
+    
+    * Execução (com `):
+        $x = `ls -lR /`;
+        
+        Saída: a saída do ls -lR /
+        
+    TIPOS DE VARIÁVEIS:
+    * Escalar: $ ($calar)
+    * Lista: @
+    * Hash: % 

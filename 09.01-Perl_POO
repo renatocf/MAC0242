@@ -1,0 +1,22 @@
+  Tipo -> Classe ---.--> atributos -> estado
+   ||       ||      |--> métodos   -> ação
+Variável  Objeto    |
+             |      '--> Perl: package
+             |
+             '---------> referêcna "blessed"
+                         |--> "Aponta para atributos"
+                         '--> package associado contém os métodos
+
+PRINCIPAIS CONCEITOS DE POO
+
+* encapsulamento
+    |--> Esconder a implementação (isolar);
+    '--> Basta a interface.
+
+* polimorfismo
+    '--> Mesmo método pode ser chamado com
+         argumentos diferentes e responde de acordo.
+
+* herança
+    '--> Herda de outras classes atributos/métodos, criando uma classe
+         mais restrita (especializada).

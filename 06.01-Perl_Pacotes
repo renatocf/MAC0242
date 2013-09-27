@@ -1,0 +1,37 @@
+Tabela de Símbolos
+Global (main) criada
+pelo Perl 
+
+     %::                       my $meu (variáveis com 'my' valem
+.---.-------.                     ^     enquanto durarem seus 
+|   |       |                   |   |   próprios escopos)
+| A | %A:: -:--------.          |   |
+|   |       |        |          |   |
+|   |       |        |
+|   |       |        |
+|   |       |        |
+| B | %B:: -:--------:--------------------------.
+|   |       |        ^                          ^                 
+|   |       |       %A::                       %B::                  
+|   |       |    .---.----.                 .---.----.               
+|   |       |    |   |    |    $            |   |    |
+'---'-------'    | a | ---:-> | | | | | |   |   |    |
+                 |   |    |    |            |   |    |
+                 |   |    |    '-> |    |   |   |    |
+                 |   |    |        |    |   |   |    |
+                 |   |    |        |    |   |   |    |
+                 |   |    |                 | a |    |    $          
+                 |   |    |                 |   | ---:-> | | | | | | 
+                 |   |    |    $            |   |    |    |          
+                 | X | ---:-> | | | | | |   |   |    |    '-> |    | 
+                 |   |    |    |            |   |    |        |    | 
+                 '---'----'    '-> |    |   '---'----'        |    | 
+                                   |    |                            
+                                   |    |                           
+
+    Outros pacotes, criados com 'package nome', têm tabelas de 
+    símbolos pŕoprias, criadas como hashes %nome::
+    
+    Mesmo os hashes dos pacotes são pares key/value do %::
+    Cada key dos %nome:: tem como 'key' os nomes das variáveis globais,
+    e os 'values' são os typeglob.

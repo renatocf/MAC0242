@@ -1,0 +1,97 @@
+Orientação a Objetos em Perl
+------------------------------
+
+* Encapsulamento
+    Colocar, dentro do pacote, uma série de estruturas, de modo que ela
+    não apareça para o usuário. Toda a comunicação deve ser feita via
+    interfaces (métodos) bem definidos.
+    
+                            .-------------->
+                    .-------|--------.
+                    | Dados visíveis |
+                    |          <-----:-----> 
+                    | Dados          |
+                    |          <-----:----->
+                    |                |
+                    '----------------'
+    
+    Em Perl, para criar o encapsulamento, podemos usar uma estrutura
+    especial, o 'package', que é um ESPAÇO DE NOMES SEPARADO. Essa é,
+    por si própria, uma forma de criar um encapsulamento.
+    
+    O espaço de nomes separado é criado por causa da tabela de símbolos
+    específica do pacote (%nome_do_pacote::), e o acesso a ele não é 
+    imediato.
+    
+    Para que valha como Orientação a Objetos, precisamos passar uma 
+    referência 'blessed', que se torna um objeto, ao amarrar a
+    referência ao package.
+    
+    Na prática, podemos criar uma "receita" para fazer a orientação a 
+    objetos:
+    * construtor;
+        Em perl, criamos uma variável com 'my', e ela é uma nova região
+        da memória que não está na tabela de símbolos. Em seguida,
+        fazemos um 'bless' (para que ela se torne um objeto) e, então,
+        retornamos uma REFERÊNCIA (porque, mesmo quando o nome sair de
+        instância, dos dados não serão apagados).
+        
+        Os construtores não precisam ter um nome específico, mas em
+        outras linguagens, como C++ e Java, usa-se 'new'.
+
+        Um modelo padrão de construtor seria:
+
+        sub new {
+            shift $class; # Usualmente, coloca-se 
+            my $r;
+            $r = {}; # Em geral, usamos um 'hash' para criar os objetos.
+                     # Esta é uma referência para hash (criada com {} ).
+            ...      # Outras ações
+            return bless $r, $class;
+        }
+        
+        Temos algumas maneiras de chamar o construtor (mas a última
+        é a mais usual):
+        
+        # 1º: A forma tradicional, mais clara
+        my $r = Carro::new("Carro");
+        
+        # 2º: A forma usual para métodos normais
+        my $r = Carro->new;
+        
+        # 3º: A forma mais comum para os construtores
+        my $r = new Carro;
+        
+        Todas as formais acima são usadas para criar um novo objeto.
+    
+    * destrutor;
+        Em Perl, não é necessário criar destrutores, pois quando não
+        houver mais referências, o objeto será coletado.
+        
+    * métodos;
+        Para que seja um método, as subrotinas (funções) precisam
+        pegar, por meio de um shift em @_, do nome do objeto (para que
+        possamos extrair os dados daquele objeto):
+        
+        use comb {
+            shift $obj;
+            return $obj->{comb};
+        }
+        
+        E podemos chamar das seguintes maneiras:
+        Carro::comb($r); # Chamando a função 'comb', do pacote 'Carro',
+                         # para o objeto '$r'.
+        $r->comb();      # Ou, como açúcar sintático, temos este método
+                         # de chamada, que não exige que saibamos qual 
+                         # o pacote/classe.
+        
+    * métodos de acesso.
+        Chamados de setters (para atribuir) e getters (para recuperar)
+        os valores. Esses métodos são úteis porque tiramos a necessidade
+        do usuário de saber como as informações estão sendo guardadas.
+    
+* Polimorfismo
+    Acesso de modos diferentes aos dados.
+
+* Herança
+    Reaproveitamento e extensão estruturas anteriores.

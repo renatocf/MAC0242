@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+use encoding 'utf8';
+
+while(<>) {
+    @pal = split;
+    foreach (@pal) {
+        $val{$_}++;
+    }
+}
+
+foreach ( sort { $val{$b} <=> $val{$a} } sort keys(%val) ) {
+    printf "%-20.20 : %4d\n", $_, $val{$_};
+}
+
+--------------------------------------
+<> -> leitura da SUPER ENTRADA
+      |--> joga em $_
+      '--> arquivos passados na linha de comando 
+           OU na entrada padrão <STDIN>
+
+<FILEHANDLE> -> Lê um registro
+                |--> REGISTRO: pedaço do arquivo separado 
+                |              pelo conteúdo de $/
+                '--> $/ é or default o "\n"
+
+prog arg1 arg2
+linha de comando: @ARGV

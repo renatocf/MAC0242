@@ -1,0 +1,206 @@
+PACOTES
+-----------------------------------------------------------------------
+
+Os pacotes são muito importantes em Perl, pois eles permitem que se faça
+modularização e compartimentação de uma maneira interessante.
+
+Uma possibilidade é dividir, em três módulos, os pacotes:
+
+         M                    V                   C
+      (model)             (visual)            (control)
+
+      EXECUÇÃO          SAÍDA GRÁFICA     ENTRADA E CONTROLE
+    .-----------.       .-----------.       .-----------.
+    |           |       |           |       |           |
+    |           |       |           |       |           |
+    |           |       |           |       |           |
+    |           |       |           |       |           |
+    |           |       |           |       |           |
+    '-----------'       '-----------'       '-----------'
+
+O modelo de MVC é um dos 'patterns' (designs de implementação) mais
+usados universalmente, e ele é muito útil para que possamos fazer a
+divisão de tarefas entre vários grupos.
+
+Um ponto importante é a independência entre os módulos: quando fazemos
+uma mudança dentro do programa, queremos manter a interface do programa,
+de modo que mudanças na área de execução não causem problemas nos outros
+módulos criados.
+
+Para que façamos isso, é necessário que usemos espaços de nomes
+(namespaces, na nomenclatura de C++) para fazermos esta divisão, e não
+causarmos conflito. Em PERL, temos os "packages", que podem ser usados
+para criar as próprias tabelas de símbolo.
+
+A vantagem de Perl para este uso é que ele permite, em geral, que
+tenhamos controle sobre as contruções. Dessa maneira, é possível fazer
+vários módulos.
+
+A Orientação a Objetos (OO) foi criada justamente com o objetivo de
+facilitar esta modularização. Algumas linguagens já a tem implementada
+internamente, mas em Perl faremos a construção dela.
+
+O ponto central da Orientação a Objetos não são os algoritmos a serem
+construídos para realizarem ações, mas sim os dados, os tipos de dados e
+as instâncias a serem relacionadas. Isso facilita a MANUTENÇÃO dos dados
+ao longo do tempo. Teremos também algumas INTERFACES para a manutenção e
+também algoritmos (MÉTODOS) para lidar com os dados.
+
+Três grandes características são importantes para o uso em OO (com o
+exemplo de uma pilha):
+* Encapsulamento: 'esconder' a implementação, para evitar que afetemos o
+                  restante do programa. Por exemplo, desejamos que a
+                  pilha tenha métodos, e não saibamos mais;
+* Polimorfismo:   Um mesmo objeto pode ser aplicado com diferentes tipos
+                  de dados (inteiros, floats, objetos). Uma pilha
+                  deveria fazer uma abstração deste conceito;
+* Herança:        Capacidade de expandir uma implementação de classe, 
+                  usado o modelo antigo e adicionando funções. Essa
+                  forma, na realidade, RESTRINGE o conjunto, pois sua
+                  aplicação se torna mais específica.
+
+Usaremos os "packages" para IMPLEMENTAR uma forma de orientação a objetos 
+em Perl. Cada package, separado, pode ser chamado de MÓDULO.
+
+Em várias linguagens, existem bibliotecas extendidas, que podem ser
+usadas para criar abstrações. Em Perl, esta biblioteca de módulos é
+enorme, e permite que façamos vários usos.
+
+REQUIRE e USE
+-----------------------------------------------------------------------
+
+Em perl, o comando 'REQUIRE' é usado para executar código em Perl que
+está em um arquivo. Ele é parecido com o que "eval" faz para strings.
+Ele carrega os arquivos diretamente EM TEMPO DE EXECUÇÃO.
+
+A partir do momento em que foi carregado, o código daquele arquivo é 
+executado. Se ele contém um conjunto de funções, então, a partir
+daquele momento, elas estarão disponíveis.
+
+Também temos dois blocos especiais, como em AWK: BEGIN e END
+* BEGIN: executa o código antes da compilação do restante do arquivo,
+         assim que o programa principal é importado.
+* END:   é executado mesmo quando há erros, para encerrar o programa.
+
+Se quisermos que um arquivo seja carregado/executado desde o início do
+programa, podemos usar o USE:
+
+use blah ≡ BEGIN {
+               require "blah.pm"; # Carrega o arquivo blah
+               import;            # Carrega variáveis globais na 
+                                  # tabela de símbolos.
+           }
+
+O USE, quando vem seguido de um NOME, supõe que o arquivo tem extensão
+.pm (Perl Module). Estes arquivos sempre precisam ter uma última
+expressão que termina com VERDADEIRO - geralmente, 1;
+
+Podemos construir nomes de pacotes na forma "A::B". Na realidade, este
+uso não tem mudanças (é apenas um nome). A única utilidade é que, se
+existir um diretório "A" no diretório principal, então ele pode procurar
+por um módulo "B" dentro do diretório "A".
+
+Exemplos de pacotes
+
+     %::
+.---.-------.                  my $meu  Variáveis com 'my' valem
+|   |       |                     ^     enquanto durarem seus 
+| A | %A:: -:-------.           |   |   próprios escopos.
+|   |       |       |           |   |   
+|   |       |       |           |   |   Elas não têm um GLOB associado
+|   |       |       |
+|   |       |       |
+| B | %B:: -:-------:--------------------------.
+|   |       |       ^                          ^                 
+|   |       |      %A::                       %B::                  
+|   |       |    .---.--.                   .---.--.               
+|   |       |    |   |  |    $ @ % & FH     |   |  |
+'---'-------'    | a | -:-> | | | | |  |    |   |  |
+                 |   |  |    |              |   |  |
+                 |   |  |    '-> n |    |   |   |  |
+                 |   |  |        s |    |   |   |  |
+                 |   |  |        r |    |   |   |  |
+                 |   |  |                   | a |  |    $ @ % & FH 
+                 |   |  |                   |   | -:-> | | | | |  |
+                 |   |  |  $ @ % & FH       |   |  |    |          
+                 | B | -:-| | | | |  |      |   |  |    '-> n |    | 
+                 |   |  |      |            |   |  |        s |    | 
+                 '---'--'      ^            '---'--'        r |    | 
+                             %A::B                                
+                            .---.--.
+                            |   |  |
+                            | a | -:
+                            |   |  |
+                            |   |  |
+                            |   |  |
+                            '---'--'
+
+ORIENTAÇÃO A OBJETOS
+-----------------------------------------------------------------------
+
+     %A::       
+.------.-------.
+| meu  |       |
+| novo |       |
+| a    |       |
+| Ok   |       |
+| B    |       |
+| X    |       |
+'------'-------'
+
+O comando 'bless' torna a referência a uma estrutura um objeto. Isto
+é interessante porque ele "batiza" a variável como uma parte dele. 
+
+Isto modifica a referência, tornando-a um objeto e permitindo que, para
+ela, sejam chamados os métodos.
+
+Para um pacote A, chamar as funções da seguinte forma é equivalente:
+    A::OK (...);        &A::OK;         OK A;       A->OK;
+
+Vamos citar um exemplo de esqueleto de um programa:
+package Carro;
+sub novo     { ... }
+sub abastece { ... }
+
+package main;
+$fiat = novo Carro; # Equivalente a:  Carro::novo () 
+                    #                &Carro::novo    ;
+                    #                &Carro::novo () ;
+
+Carro::abastece($fiat) # Sempre precisamos nos lembrar de qual o tipo
+                       # da variável para que possamos chamar os métodos
+                       # relacionados à variável $fiat.
+
+# Mas, como nossa variável foi 'blessed', podemos usar uma sintaxe
+# um pouco diferente:
+
+$fiat->abastece;
+
+# Quando faz isso, a função realiza uma série de passos:
+# * Procura a função no pacote blessed de $fiat;
+# * Se não houver, busca nos pacotes da variável @ISA;
+# * Se não estiver em @ISA, usa a função AUTOLOAD do pacote;
+# * Se não houver o AUTOLAD do pacote, procura nos pacotes @ISA;
+# * No último caso, faz o AUTOLOAD automático do pacote UNIVERSAL
+
+    %Carro                            %::
+|       |   |    $ @ % & FH      |      |   |
+| novo  | --:-> | | | | |  |     |      |   |
+|       |   |          ^         |      |   |       $ @ % & FH 
+|       |   |       | CODE |     | fiat | --:----> | | | | |  |
+|       |   |                    |      |   |       |
+|       |   |    $ @ % & FH      |      |   |       ^
+| abas. | --:-> | | | | |  |     |      |   |   n |   | .->  |  |  |
+|       |   |          ^         |      |   |   s |   | |    |  |  |
+|       |   |       | CODE |     |      |   |   r | --:-'    |  |  |
+                                                             |  |  |
+                                                                 |  |  |
+
+    CONCEITOS DE ORIENTAÇÃO A OBJETOS
+-----------------------------------------------------------------------
+
+O conceito chave de orientação a objetos é justamente este
+"conhecimento" do objeto sobre a qual classe ele pertence, e quais
+funções ele pode realizar. Isso já permite o POLIMORFISMO e o
+ENCAPSULAMENTO (pois não precisamos saber como o objeto faz, mas apenas
+que ele faz).

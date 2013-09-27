@@ -1,0 +1,11 @@
+PROJETO
+
+A primeira fase do projeto será criar um mini-código assembly que será
+gerada, via um interpretador, com o uso de Perl.
+
+Em seguida, esta linguagem será utilizada para construir o código em
+Java (posteriormente).
+
+-> montador em Perl
+  |-> interpretador;
+  '-> gerar o código em Java.

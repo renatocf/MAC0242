@@ -1,0 +1,65 @@
+Gubi
+gubi@ime.usp.br
+sala 226 - ccsl
+
+Monitor
+rsampaio@ime.usp.br
+
+PACA
+LabProg 2
+- Script (Perl)
+- Java (OOP)
+- Ferramentas de geração de código
+
+Avaliação
+    * PROVAS (datas para marcar na terça-feira)
+        MP = P1 + 2*P2
+             ---------
+                 3
+        Sub aberta (toda matéria), para maximizar a nota.
+        
+    * PROJETO (4 fases)
+        MT = F1 + F2 + F3 + 2*F4
+             -------------------
+                     5
+        Caso não dê para criar tudo, descrevendo o que não
+        foi possível fazer, ele poderá considerar esta nota
+        na fase seguinte. (Documentar bugs também é importante)
+        
+    * FINAL
+        MF = { 3*MT + 2*MP ↔ MP ≥ 5, MT ≥ 5
+             { -----------
+             {      5
+             { min(MP, MT), c.c
+
+Linguagens
+* Perl + Python
+  '--> implementação de OOP
+* Java --> OpenGL (para C, existe como usar no Java)
+* Construção de compiladores (C/C++: Flex/Bison; Java: javacc)
+
+Projeto
+--> Jogo: Batalha de Robôs
+    |--> pique-bandeica
+    |--> robôs são programáveis
+    |    '--> Uma vez recebido o programa,
+    |         ele se movimentará sozinho.
+    |--> 1ª fase: construir um interpretador
+    |             para código de máquina (com
+    |             instrução em máquina);
+    |--> 2ª fase: compilador (lê a linguagem de
+    |             alto nível e depois joga na 
+    |             máquina virtual);
+    |--> 3ª fase: parte gráfica (mapa, movimentos,
+    |             representação do mundo online)
+    |             usando o OpenGL.
+    '--> 4ª fase: extras (ex: som).
+        
+                .-------------------.
+                | *--.              |
+                |    |              |
+                |    |              |
+                |    '----------> * |
+                '-------------------'
+        
+--> Grupos de 2 ou 3 pessoas

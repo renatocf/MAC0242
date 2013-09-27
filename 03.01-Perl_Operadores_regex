@@ -1,0 +1,185 @@
+PERL - OPERADORES
+    
+    . -> Operador de concatenação
+    x -> Operador de replicação
+        
+    $a = "30"; $b = "150"; 
+    Fazendo a comparação: $a > $b;
+        -> Numericamente, 30 < 150, e o resultado é falso;
+        -> Como strings, 30 > 150 (pois 30 vem depois no 
+           dicionário), e o resultado é verdadeiro.
+        
+    $c = "algo"; $d = "outro"; 
+    Fazendo a comparação: $c > $d;
+        -> Numericamente, passando as strings no atof, teremos 
+           '0' como resultado nas strings. Logo, $c == $d;
+        -> Como strings, "algo" < "outro", e $c > $d será falso.
+        
+    Como teremos problemas de diferenciar os contextos numéricos e 
+    lexicográficos, precisaremos criar novos operadores, para cada
+    um dos contextos.
+
+                .----------------.--------------.
+                |    NUMÉRICO    |    STRING    |
+                |----------------|--------------|
+                |      ==        |      eq      |
+                |      !=        |      ne      |
+                |      >         |      gt      |
+                |      >=        |      ge      |
+                |      <         |      lt      |
+                |      <=        |      le      |
+                |      <=>       |      cmp     |
+                '----------------'--------------'
+    
+    Os valores booleanos serão:
+    -> FALSO:      0, "", undef;
+    -> VERDADEIRO: qualquer outra coisa.
+    
+    O operador <=> é interessante porque, numericamente 
+    (bem como seu equivalente 'cmp'), retorna para $a <=> $b:
+        * -1, se $a < $b;
+        *  0, se $a == $b;
+        *  1, se $a > $b;
+    
+    E este operador é muito útil para comparações
+    
+    As operações são muito interessantes porque, quando as 
+    variáveis têm os 'casts' feitos, os valores ficam armazenados,
+    até que a equivalência não seja mais válida (e os valores an-
+    tigos são descartados):
+    
+        $a = "30b";         $a > "10"            $a = "40"  
+                                                            
+        n |       |         n |       |          n |      |
+        s | "30b" |-. cast  s | "30b" |          s | "40" |
+        r |       | '-----> r |  30   | -------> r |      |
+                                        
+                                       É descartado
+                                  pela não-equivalência
+    
+
+    O operador 'substr' é interessante, porque ele permite que 
+    separemos uma substring a partir de uma string completa.
+
+EXPRESSÕES REGULARES (REGEX)
+    
+    ÁTOMOS:
+    
+    .       -> qualquer caracter ≠ \n
+    [...]   -> classe [0..9]
+    [^...]  -> complemento da classe
+    ^       -> início da string
+    $       -> fim da string
+    \b      -> borda da palavra: char para espaço/espaço para char
+    \B      -> ¬ borda da palavra: espaço para espaço/char para char
+    \s      -> espaço/tabulação
+    \S      -> ¬ espaço
+    \w      -> caracter de palavra [a..zA..Z]
+    \W      -> ¬ caracter de palavra [a..zA..Z]
+    \d      -> dígito
+    \D      -> ¬ dígito
+    
+    Ex: \b[a..z]\b reconhece palavras em ASCII
+        \Bca       reconhece cocada, mas não casa
+        \Bca\b     reconhece coca, mas não cocada
+        
+        \w+ é equivalente a [ [:alpha:] ]+
+                               ^^^^^^^
+                               a-zA-Z, ou mais, dependendo do encode
+        
+    QUANTIFICADORES:
+    
+    r? -> 0 .. 1     } gulosos
+    r* -> 0 ou mais  } (pegam o máximo possível,
+    r+ -> 1 ou mais  } se houver escolha possível)
+    
+    r?? -> 0 .. 1    } minimalistas
+    r*? -> 0 ou mais } (pegam o mínimo possível, 
+    r+? -> 1 ou mais } se houver escolha possível)
+    
+    r{n}   -> exatamente 'n'
+    r{n.m} -> entre 'n' e 'm'
+    r{n,}  -> no mínimo 'n'
+    r{,m}  -> no máximo 'm'
+    
+    Ex: \d+ \d? 123   \d+?  \d? 123
+        |       |||   |      |  |||
+        ^^^^^^  |||   '^^^^^ |  |||
+        519234  123    51923 4  123
+        
+    RELEMBRANDO: VARIÁVEIS MÁGICAS
+    $, -> separação do print
+    $" -> sepador para lista, quando a string está entre aspas
+    $_ -> default default (variável mais usada)
+    
+    OPERADOR DE MATCH m//
+    
+    $v =~ m/^\d+$/; # Verifica se a string é um número
+       ^^-- Biding/busca
+    
+    Para buscar um número sendo par:
+        if($n =~ m/\d*[02468]/);
+    
+    Mas não é prático, pois ignora possibilidades com ','
+    Para melhorar, podemos usar:
+            ^[+-](\d+ ([.]\d+|) )([eE][+-]\d+)
+    
+    Temos também alguns transformadores:
+    m/regex/imsgx
+    -> i: ignore case: maiúsculas/minúsculas
+    -> m: multi-linha: $ e ^ pegam final e início de linha
+    -> s: single line: . reconhece \n
+    -> g: reconhece todas as ocorrências
+    -> x: permite espaços entre as expressões (não são vistas
+          como parte da expressão regular)
+    
+    Um bom exemplo de single line que é útil é para que nós 
+    excluamos comentários de código C:
+    $code =~ `cat file.c`;
+    $code =~ m!/[*].*?[*]/!sg;
+    
+    O 's' permitirá que tenhamos o . reconhecendo \n, enquanto o
+    'g' mandará um vetor com todos os comentários do código.
+    
+    Quando colocamos o /g, temos um vetor que retorna todas as 
+    ocorrências.
+    
+    O 'm' não é necessário ($a =~ /regex/ interpreta como expressão
+    regular), e também os // podem ser mudados ($a =~ !regex! faz o
+    mesmo da expressão anterior)
+    
+    Se colocarmos parêntesens entre as substituições, temos dois
+    recursos interessantes:
+    1) fazer alternativas: (#|^\s+$) (linhas em branco/comentários)
+    2) Salvar os conteúdos com match em campos específicos em va-
+       riáveis numeradas: $1, $2, ...
+    
+    OPERADOR DE SUBSTITUIÇÃO s///
+    
+    s/sapo/$n++/ge
+    Valem os mesmos modificadores, mas o 'e' executa a string
+    na segunda posição na subistituição.
+    
+LEITURA DE ARQUIVOS
+    
+    Para ler da entrada padrão, e colocar em $_, só precisamos
+    fazer <>
+    
+    Para tanto, basta usar:
+    
+    * Limpa linhas em branco e comentários:
+    while(<>) {
+        next if /^#/;
+        next if /^\s*$/;
+    }
+
+PUZZLE
+
+print "yes!!" unless (1 x <>) =~ /^(11+)\1+$/
+Ex: 15: 11111 11111 11111
+        ^^^^^ ^^^^^ ^^^^^
+         \1   \1    \1
+        
+        Essa expressão reconhece um certo número de sequências
+        e, até lá, encontra múltiplos deles. Se há múltiplos, 
+        ele não é primo. Caso contrário, reconhece.

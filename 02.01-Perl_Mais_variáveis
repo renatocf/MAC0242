@@ -1,0 +1,143 @@
+PERL
+----
+
+$ escalar
+    * número     (n)
+    * string     (s)
+    * referência (r) 
+        Sempre sabem para que tipo de estrutura eles estão 
+        sendo testadas (ex: ARRAY(0x8837238) ). E ela pode
+        ser impressa na forma de strings. Mas não é possível
+        fazer nenhum tipo de aritmética de ponteiros. Se em
+        uma variável fosse atribuída a string ARRAY(0x8837238),
+        ela nunca seria interpretada como string.
+            
+    * Serão representados pelas caixas:
+                      ._______.     
+        $escalar    n |       |     O nome é, na verdade, uma 
+           '------> s |       |     referência para a memória,    
+                    r |_______|     mas, na verdade, a memória
+                                    pode continuar a existir 
+                                    mesmo quando o nome já está
+                                    fora do escopo.
+    * Operadores diferentes:
+        $, : variável com separador para impressão de listas
+        $" : variável com as fronteiras 
+        
+@ array (vetor/lista)
+    * push/pop/shift/unshift
+      (os operadores facilitam a constução de pilhas e filas)
+    * [ ... ] 
+      (referência anônima para array)
+
+        @lista                      ._____._____.
+           '----------------------> |_____|_____|
+                                    |     |     |
+                                    |_____|_____|
+                          .____________|     |____________.
+                          |                               |
+                      .___^___._______._______._______.___^___.
+                    n |       |       |       |       |       |
+                    s |       |       |   |   |       |       |
+                    r |_______|_______|___|___|_______|_______|
+                                          |
+                                  ._______^_______.
+        Uma lista de listas     n |       |       |
+        tem que ter uma refe-   s |       |       |
+        rência para a lista     r |_______|_______|
+
+% hash
+    * É inicializado com uma lista
+    * Funciona como um mini-banco de dados, na forma de chave-valor:
+      (chave_1, valor_1, chave_2, valor_2, ...)
+      
+        (As variáveis deveriam estar em número par, mas se o número
+        for ímpar, a última será inicializada com 'undef')
+    
+    * Ex: ('red', "vermelho", 'blue', "azul", 'green', "verde")
+    
+        A associação acima é a responsável por hashes serem,
+        eventualmente, chamados de dicionários.
+        
+        Mas, na realidade, pode ser pouco legível para ver como
+        uma lista simples. Existe um 'açúcar sintático para a
+        lista: basta trocar a vírgula (,) por uma flecha (=>).
+        
+        (red => "vermelho", 'blue' => "azul", 'green' => "verde")
+         ^^^                                  ^^^^^^^
+          |--------------------------------------'
+          '- Nesse caso, não é necessário que colocuqemos o '', 
+             pois como o separador => foi feito pensando em hashes, 
+             então o interpretador já suporá que as palavras à 
+             esquerda são, na realidade, strings.
+    
+    * Os hashes so Perl são baseados em AWK, sendo que no AWK,
+      realmente, todas as listas são hashes.
+     
+    * Internamente, em Perl, os hashes são implementados com uma 
+      tabela de hash. Sempre, internamente, teremos uma associação
+      de STRINGS com valores ESCALARES
+        
+        chave   (string)    Função de hash: chave->número
+          |                 Solução de colisões
+        valor   ($escalar)                     
+    
+    * Para que encontremos qual o valor, usamos o símbolo para 
+      escalares: a chave retorna o valor: $cor{'blue'}
+    
+    * Mas também podemos fazer um 'slice' do hash, usando, para
+      isso, a construção com @: @h{'red', 'blue'}
+    
+    * Comando 'each':
+        Ele é um operador 'iterador', que permite que avancemos,
+        dentro do hash (por exemplo), para que possamos passar
+        por todas as chaves.
+
+FUNCIONAMENTO INTERNO
+---------------------
+
+texto ->        +        print     } Para cada uma das variáveis
+              /   \      /   \     } e expressões, temos que, o
+             *     -        sort   } interpretador do Perl (que 
+            / \   / \              } é implementado em C) cria 
+           2   5 3   8             } uma árvore de operadores.
+                                   } Esse é um conceito muito im-
+            2*5 + 3-8              } portante para POO.
+
+ESTRUTURAS DE REPETIÇÃO
+-----------------------
+
+Há três maneiras de escrever laços:
+* for como no C: 
+    for($i = 1; $i < 4; $i+) { say $i*$i; }
+
+* foreach:
+    foreach $i (1..4) { say $i*$i; }
+               ^^^^^^
+                 ''-- Pode ser qualquer vetor 
+
+ESTRUTURAS COMPLEXAS
+--------------------
+
+$legal{'Jedi'} = ['Luke', 'Yoda', 'Obi Wan'];
+
+        legal
+    .----.------.
+    |    |      |
+    |----|------|    
+    |Jedi|  ----:--> n |      |
+    '----'------'    s |      |    .-------. 
+                     r |   ---:--> |       |
+                                   |---.---|
+                                   |   |   |
+                                   '---'---'
+                                   /       \
+                                  /         \
+                                 .---.---.---.
+                               @ |   |   |   |
+                                 '---'---'---'
+                                   /   |   \
+                                  /    |    \
+                             n |   | |   | |   |
+                             s |Luk| |Yod| |Obi|
+                             r |   | |   | |   |
