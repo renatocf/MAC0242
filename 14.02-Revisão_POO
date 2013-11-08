@@ -1,0 +1,26 @@
+Orientação a Objetos
+
+-> Manutenção e organização do código
+-> Código reutilizável
+-> Planejamento em alto nível
+   '--> concentra na estrutura de dados
+
+-> Objeto
+    * atributos
+    * ações
+    * identidade
+
+-> Tipo -> Classe
+   '--> Comportamento (+ atributo)
+
+-> Encapsulamento
+
+-> Herança
+    '--> permite aprimorar sem quebrar 
+         encapsulamento
+
+-> Polimorfismo
+
+-> Classe
+    |--> instâncias -> objetos
+    '--> variáveis de classe (static)

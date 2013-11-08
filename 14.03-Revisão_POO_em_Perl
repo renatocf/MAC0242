@@ -1,0 +1,16 @@
+Em Perl, a orientação a objetos é feita usando 'bless' e 'packages'.
+
+bless $ref, package;
+
+$ref
+n|   |
+s|   |
+r| *-:---> | valor | tipo | package |
+               |      ^     %algo::
+               ^     @,%
+           (endereço)
+
+$r->f() # Passa a ser a chamada para o método f
+$s->algo; (equivalente a package do s)::algo($s);
+
+A referência sempre é o primeiro argumento do s

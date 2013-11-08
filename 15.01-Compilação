@@ -1,0 +1,157 @@
+Funcionamento de um compilador
+==============================
+
+   (Texto) ----------> (Objeto)
+(Alto nível) ---> Vetor de instruções
+
+As etapas de compilação passapor 3 fases:
+1) Análise léxica:
+    Busca por tokens/itens léxicos/lexemas
+    (todos sinônimos) - são chamados de 
+    SÍMBOLOS TERMINAIS
+    
+    Nesta fase, ele busca por NOMES DE 
+    VARIÁVEIS, CONSTANTES, etc.
+    
+    Procura as palavras identificando o
+    seu vocabulário (essencialmente, o
+    chamado ALFABETO da linguagem).
+    
+2) Análise sintática:
+    Busca por regras sobre a linguagem.
+    Eles são chamados de SÍMBOLOS NÃO
+    TERMINAIS.
+    
+    O conjunto das regras forma a 
+    GRAMÁTICA da linguagem.
+    
+3) Semântica
+    Última frase, que atribui significado
+    à gramática. Baseado na gramática, 
+    ele faz processos diferentes.
+
+Fazer esses processos sozinho é um pouco
+complicado. Para tanto, existem ferramentas
+para isso.
+
+No caso de C, existe o Flex (baseado no Lex)
+para criar o interpretador léxico. O analisador
+sintático é feito pelo Bison (baseado no Yacc)
+
+Para Java, temos o javacc, que realiza ambos 
+os comandos.
+
+LINGUAGENS
+==========
+
+O estudo de linguagens foi iniciado por Noam
+Chomsky, ao utilizar o estudo de linguagens 
+naturais.
+
+As linguagens são divididas em vários níveis:
+1 - Gramáticas sensíveis ao contexto.
+    (Linguagens naturais)
+    
+2 - Gramáticas livres de contexto.
+    
+3 - Linguagens que seriam interpretáveis com
+    o uso de expressões regulares (com autô-
+    matos finitos).
+
+ALFABETOS/GRAMÁTICAS/SEMÂNTICA
+==============================
+
+Vamos trabalhar com gramáticas livre de contexto.
+* Alfabeto: 
+    Lista de símbolos (terminais).
+    (Basta um conjunto de expressões regulares
+    para fazer o recohecimento).
+    
+* Sintaxe:
+    Regras de composições entre palavras.
+    Ex:
+        S -> aXb
+        X -> a|D
+        D -> c|cD
+        
+        Símbolos possíveis seriam:
+        aab  acb  acccb  acccccb
+        aXb  aXb  a X b  a  X  b
+        X=a  X=D   X=D     X=D
+             D=c  D=cD     ...
+                  D=cD   
+                  D=cD   
+    
+    Ex: E -> E [+-] T | T || Essa linguagem
+        T -> T [x/] F | F || vai de cima para
+        F -> número | (E) \/ baixo
+        
+PROCESSO DE ANÁLISE
+===================
+
+Os analisadores sintáticos usam dois comandos
+para fazer a análise: SHIFT e REDUCE.
+
+Ex: Na nossa linguagem acima:
+    5*3 + 4/(2-1)
+    ^   ] 
+    F   ] - Identificamos um número. Ele é
+            um fator (REDUCE)
+    F*  ] - Queremos identificar um
+            termo. Logo, avançamos um
+            símbolo (SHIFT).
+    T*  ] - Pelas regras, precisamos ter 
+            um termo. Ele, então, 
+    F*F ] - Como o termo não fechou, avançamos 
+            (SHIFT).
+    ^^^ ] - Como a tripla segue a sintaxe de
+     T  ]   um termo, aplicamos um REDUCE.
+
+Podemos utilizar o processo de REDUCE como uma
+oportunidade para realizar alguma ação ligada 
+à semântica.
+
+JAVACC
+======
+
+O Javacc tem várias opções:
+    * Arquivodeve ser no formato .jj
+    * Lookahead: quantos elementos serão 
+                 vistos à frente para fazer
+                 alguma decisão (por padrão, 
+                 e geralmente, 1)
+    * Unicode_Input
+    * Build_parser/Build_Token_Manager
+    
+    * Forma da gramática:
+    void nome_da_regra() :
+    {} // Regras para colocar variáveis locais
+    {
+        // Ações a serem realizadas
+    }
+    
+    * Para pular tokens (ignorando-os), usamos
+      SKIP:
+        SKIP :
+        { 
+            " "
+            "\n"
+            "\t"
+            "\s"
+        }
+    
+    * Para definir tokesns,usamos:
+        TOKEN :
+        {
+            <LBRACE: "{">
+          | <RBRACE: "}">
+        }
+        
+        E podemos usar o token internamente dentro 
+        usando <LBRACE>
+    
+DICAS CULTURAIS
+===============
+    
+    Gödel, Escher, Bach (Douglas Hofstadter)
+    Contos Jorge Luiz Borges

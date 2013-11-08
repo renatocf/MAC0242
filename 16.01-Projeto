@@ -1,0 +1,16 @@
+Exemplo de gramática a ser usada para o Projeto:
+
+// Exemplo de expressão para índice
+if(Exp) (Comando; | Bloco)
+
+Exemplo:
+if(a > b) c = 40 + 2;
+
+100 RCL    10     | a -> 10
+101 RCL    42     | b -> 42
+102 LE     [108]  | c ->  3
+103 PUSH   40     | 
+104 PUSH   2      | 
+105 ADD           | 
+106 STO    3      | 
+107 JMP           | 

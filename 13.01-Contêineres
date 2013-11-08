@@ -1,0 +1,30 @@
+CONTÊINERES
+===========
+
+Para cada grupode objetos, podemos criar uma maneira de organizá-los
+(uma maneira de colecioná-los). Os exemplos mais simples são o uso de 
+ARRAYS e MATRIZES. 
+
+1. Arrays
+
+* Funcionam como em C;
+* Fazem verificação de tipo;
+* Os tamanhos são fixos, e os limites são verificados (posteriormente,
+  lançando exceções se ele for fora);
+* Não podem ter índices negativos;
+* Têm todos o método 'length', para o tamanho;
+* Todos os arrays começam apontando para 'null';
+* Em outros contêineres, o tipo é 'Object'.
+
+2. java.util.Arrays
+
+* Contém uma série de métodos 'static' que permitem operações sobre 
+  arrays;
+    - fill(array,val)        (preenche o array com um valor);
+    - sort(array)            (ordena um array)
+    - equals(array1, array2)
+    - ...
+
+3. Coleções (collection) - listas (List) ou conjuntos (Sets)
+
+4. Maps - hashes em geral (ex: HashMap)

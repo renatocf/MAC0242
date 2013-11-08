@@ -1,0 +1,76 @@
+Perl
+|-> máquna virtual
+|-> estrutura de dados especiais
+'-> tipo dinâmico
+
+Variáveis
+$  -> e$calar
+@  -> @rray (lista ou vetor)
+%  -> %ash
+&  -> subrotina
+FH -> filehandle
+*  -> glob
+
+Representações
+
+$ .-> número        n |  42  |
+  |-> string        s | "42" |  undef
+  '-> referência    r | ---- |
+
+@ ->                  |     |
+                      |  |  | -> ponteiros para o início e o fim
+                       /   \
+                .-----´     `-----.
+               | | | | | | | | | | |
+                | | 
+             .--' | -> ponteiros para escalares
+          n|   |  '--.
+          s|   |   n|   |
+          r|   |   s|   |
+                   r|   |
+
+% ->   k    v
+     |   |  *--:-------> n|   |
+     |   |     |         r|   |
+     |   |     |         s|   |
+     |   |     |
+     |   |     |
+     |   |     |
+     |   |     |
+
+$ -> |     |
+     | sub |
+     |     |
+
+* ->   $ @ % & FH
+      | | | | |  |
+
+packages:
+    Uma variável de pacote é criada usando 'our'
+    
+    %::  (principal/main)
+    %A:: (package A)
+    
+      %::
+   | a |  *--:------->  $ @ % * FH
+   |   |     |         | | | | |  |
+   |   |     |          |   |
+   |   |     |       n|   | '--> |   |   |
+   |   |     |       r|   |      |   |   |
+   |   |     |       s|   |      |'x'| *-:--> n|1729|
+   |   |     |                   |   |   |    r|    |
+                     $a = 42     |   |   |    s|    |
+                                    %a      
+                                           $a{'x'} = 1729
+
+local:
+    É uma forma antiga de salvar uma variável global. O Perl cria uma
+    'pilha' de valores, e enquanto durar o escopo do 'local', teremos
+    o valor do topo da pilha será o atual. Depois disso, ele será 
+    descartado e o valor antigo retorna.
+    
+    Atualmente, o único lugar onde faz sentido usar 'local' é para
+    trocar, TEMPORARIAMENTE o valor de uma variável global.
+    
+    Ainda assim, o melhor uso é com as VARIÁVEIS MÁGICAS do Perl.
+    Ex: '$/', '$,', '$"', '$_', ...
